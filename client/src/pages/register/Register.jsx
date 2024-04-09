@@ -45,7 +45,6 @@ const Register = () => {
 
   return !isRegisterSuccessful ? (
     <div className="main-container">
-      <video className="video" src="/smv.mp4" autoPlay autoFocus></video>
       <div className="register">
         <div className="opacity">
           <Logo h={"150"} />

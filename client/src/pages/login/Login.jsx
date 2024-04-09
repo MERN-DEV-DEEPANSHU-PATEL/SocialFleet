@@ -31,19 +31,6 @@ const Login = () => {
 
   return (
     <div>
-      <video
-        className="video"
-        style={{
-          position: "absolute",
-          height: "100vh",
-          width: "100vw",
-          zIndex: "-1",
-        }}
-        src="/smv.mp4"
-        autoPlay={true}
-        autoFocus={true}
-        loop={true}
-      ></video>
 
       <div className="login">
         <div className="opacity">
