@@ -14,5 +14,4 @@ import { AuthContext } from "../context/authContext";
 
   return makeRequest;
 };
-
 export default useMakeRequest

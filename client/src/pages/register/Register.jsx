@@ -19,9 +19,8 @@ const Register = () => {
     password: "",
     name: "",
   });
-  const [isRegisterSuccessful, setIsRegisterSuccessful] = useState(false);
+  const [sendOtp, setsendOtp] = useState(false);
   const [err, setErr] = useState(null);
-
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -29,21 +28,15 @@ const Register = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        "http://localhost:8800/api/auth/register",
-        inputs
-      );
-      await axios.get(
-        `http://localhost:8800/api/auth/getotp?email=${inputs.email}`
-      );
-      setIsRegisterSuccessful(true);
-      toast.success("Register Successful");
-    } catch (err) {
-      toast.error(err.response.data.msg);
+      const {data} = await axios.get(`http://localhost:8800/api/auth/getotp?email=${inputs.email}&username=${inputs.username}`)
+      console.log(data);
+      setsendOtp(true)
+    } catch (error) {
+      toast.error(error.response.data.msg);
     }
   };
 
-  return !isRegisterSuccessful ? (
+  return !sendOtp ? (
     <div className="main-container">
       <div className="register">
         <div className="opacity">
@@ -96,7 +89,7 @@ const Register = () => {
       </div>
     </div>
   ) : (
-    <MailVerify email={inputs.email} />
+    <MailVerify inputs={inputs} />
   );
 };
 

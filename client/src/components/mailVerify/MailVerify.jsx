@@ -5,7 +5,7 @@ import "./MailVerify.scss";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-const MailVerify = ({ email }) => {
+const MailVerify = ({ inputs }) => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const navigate = useNavigate();
   const inputRefs = useRef([]);
@@ -26,16 +26,15 @@ const MailVerify = ({ email }) => {
 
   const handleVerifyOtp = async () => {
     try {
-      await axios.get(
-        `http://localhost:8800/api/auth/verifymail?email=${email}&otp=${otp.join(
-          ""
-        )}`
+      const { data } = await axios.post(
+        "http://localhost:8800/api/auth/register",
+        {...inputs,otp:otp.join("")}
       );
-      toast.success("Email verified Now Please Login");
-      navigate("/login");
-      console.log("Verifying OTP:", otp.join(""));
-    } catch (error) {
-      console.log(error);
+      toast.success(data.msg);
+      navigate("/login")
+    } catch (err) {
+      console.log(err);
+      toast.error(err.response.data.msg);
     }
   };
 

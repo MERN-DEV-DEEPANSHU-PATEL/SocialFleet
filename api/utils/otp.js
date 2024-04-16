@@ -47,6 +47,7 @@ export const sendOtp = async (email) => {
 
 export const verifyOtp = (otp, email) => {
   const storedOTP = otpStore.get(email);
+  console.log(otp,email,"verifyotp here");
   if (!storedOTP) {
     return { isVerify: false, msg: "Invalid email or OTP" };
   }
