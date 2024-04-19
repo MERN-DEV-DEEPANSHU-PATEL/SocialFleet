@@ -12,6 +12,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 import useMakeRequest from "../../hook/useFetch";
+import Img from "../Img";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -64,13 +65,9 @@ const Post = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img
-              src={
-                post.profilePic
-                  ? "/upload/" + post.profilePic
-                  : "/profilePic.png"
-              }
-              alt=""
+            <Img
+              isDefault={post.profilePic ? false : true}
+              src={post.profilePic ? post.profilePic : "/profilePic.png"}
             />
             <div className="details">
               <Link
@@ -89,7 +86,7 @@ const Post = ({ post }) => {
         </div>
         <div className="content">
           <p>{post.desc}</p>
-          <img src={"/upload/" + post.img} alt="" />
+          {post.img && <Img isDefault={false} src={post.img} />}
         </div>
         <div className="info">
           <div className="item">

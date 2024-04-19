@@ -20,6 +20,7 @@ const Register = () => {
     name: "",
   });
   const [sendOtp, setsendOtp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState(null);
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -27,13 +28,17 @@ const Register = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
-      const {data} = await axios.get(`http://localhost:8800/api/auth/getotp?email=${inputs.email}&username=${inputs.username}`)
+      const { data } = await axios.get(
+        `http://localhost:8800/api/auth/getotp?email=${inputs.email}&username=${inputs.username}`
+      );
       console.log(data);
-      setsendOtp(true)
+      setsendOtp(true);
     } catch (error) {
       toast.error(error.response.data.msg);
     }
+    setIsLoading(false);
   };
 
   return !sendOtp ? (
@@ -49,6 +54,7 @@ const Register = () => {
                 type="text"
                 placeholder="Username"
                 name="username"
+                value={inputs.username}
                 onChange={handleChange}
               />
             </div>
@@ -58,6 +64,7 @@ const Register = () => {
                 type="email"
                 placeholder="Email"
                 name="email"
+                value={inputs.email}
                 onChange={handleChange}
               />
             </div>
@@ -67,6 +74,7 @@ const Register = () => {
                 type="password"
                 placeholder="Password"
                 name="password"
+                value={inputs.password}
                 onChange={handleChange}
               />
             </div>
@@ -76,11 +84,18 @@ const Register = () => {
                 type="text"
                 placeholder="Name"
                 name="name"
+                value={inputs.name}
                 onChange={handleChange}
               />
             </div>
             {err && <div className="error">{err}</div>}
-            <button onClick={handleClick}>Register</button>
+            <button
+              style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
+              disabled={isLoading}
+              onClick={handleClick}
+            >
+              Register
+            </button>
           </form>
           <span className="is-user">
             Already have an account <Link to={"/login"}>Login</Link>{" "}
@@ -89,7 +104,7 @@ const Register = () => {
       </div>
     </div>
   ) : (
-    <MailVerify inputs={inputs} />
+    <MailVerify setsendOtp={setsendOtp} inputs={inputs} />
   );
 };
 

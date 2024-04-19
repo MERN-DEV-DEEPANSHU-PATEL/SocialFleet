@@ -5,6 +5,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import useMakeRequest from "../../hook/useFetch";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/authContext";
+import Img from "../Img";
 
 const Update = ({ setOpenUpdate, user }) => {
   const [cover, setCover] = useState(null);
@@ -81,13 +82,9 @@ const Update = ({ setOpenUpdate, user }) => {
             <label htmlFor="cover">
               <span>Cover Picture</span>
               <div className="imgContainer">
-                <img
-                  src={
-                    cover
-                      ? URL.createObjectURL(cover)
-                      : "/upload/" + user.coverPic
-                  }
-                  alt=""
+                <Img
+                  isDefault={cover ? true : false}
+                  src={cover ? URL.createObjectURL(cover) : user.coverPic}
                 />
                 <CloudUploadIcon className="icon" />
               </div>
@@ -101,13 +98,9 @@ const Update = ({ setOpenUpdate, user }) => {
             <label htmlFor="profile">
               <span>Profile Picture</span>
               <div className="imgContainer">
-                <img
-                  src={
-                    profile
-                      ? URL.createObjectURL(profile)
-                      : "/upload/" + user.profilePic
-                  }
-                  alt=""
+                <Img
+                  isDefault={profile ? true : false}
+                  src={profile ? URL.createObjectURL(profile) : user.profilePic}
                 />
                 <CloudUploadIcon className="icon" />
               </div>

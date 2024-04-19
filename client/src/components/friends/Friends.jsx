@@ -2,6 +2,7 @@ import React from "react";
 import "./Friends.scss";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useMakeRequest from "../../hook/useFetch";
+import Img from "../Img";
 const Friends = () => {
   const queryClient = useQueryClient();
   const makeRequest = useMakeRequest();
@@ -40,13 +41,13 @@ const Friends = () => {
             <a href={`/profile/${friend.id}`} key={friend.id}>
               <div className="user">
                 <div className="userInfo">
-                  <img
+                  <Img
+                    isDefault={friend?.profile ? false : true}
                     src={
                       friend?.profile
                         ? friend.profile
                         : "https://w7.pngwing.com/pngs/522/620/png-transparent-photo-image-person-icon-images.png"
                     }
-                    alt=""
                   />
                   <span>{friend.name + `  (${friend.username})`}</span>
                 </div>

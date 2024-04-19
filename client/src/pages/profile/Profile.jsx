@@ -19,6 +19,7 @@ import Update from "../../components/update/Update";
 import { useState } from "react";
 import useMakeRequest from "../../hook/useFetch";
 import FollowBtn from "../../components/follow/FollowBtn";
+import Img from "../../components/Img";
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -50,7 +51,7 @@ const Profile = () => {
           return res.data;
         })
   );
- console.log(username===currentUser.username)
+  console.log(username === currentUser.username);
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
@@ -80,15 +81,16 @@ const Profile = () => {
       ) : (
         <>
           <div className="images">
-            <img
-              src={urlCoverPic ? "/upload/" + urlCoverPic : "/sf.png"}
+            <Img
+              isDefault={urlCoverPic ? false : true}
+              src={urlCoverPic ? urlCoverPic : "/sf.png"}
               alt=""
-              className="cover"
+              className={"cover"}
             />
-            <img
-              src={urlProfilePic ? "/upload/" + urlProfilePic : ProfilePic}
-              alt=""
-              className="profilePic"
+            <Img
+              isDefault={urlProfilePic ? false : true}
+              src={urlProfilePic ? urlProfilePic : ProfilePic}
+              className={"profilePic"}
             />
           </div>
           <div className="profileContainer">

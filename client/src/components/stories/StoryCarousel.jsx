@@ -4,6 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import Story from "./Story";
+import Img from "../Img";
 const StoryCarousel = ({ users, setOpenStories, initialIndex }) => {
   const [currentUserIndex, setCurrentUserIndex] = useState(initialIndex);
   const [imageIndex, setImageIndex] = useState(0);
@@ -87,11 +88,9 @@ const StoryCarousel = ({ users, setOpenStories, initialIndex }) => {
         {/* Display the image carousel */}
         <div className="ontapcarousel">
           {
-            <img
-              src={
-                "/stories/" +
-                users[currentUserIndex].activeStories[imageIndex].media
-              }
+            <Img
+              isDefault={false}
+              src={users[currentUserIndex].activeStories[imageIndex].media}
               alt={"story of user"}
               onClick={handleImageClick}
             />

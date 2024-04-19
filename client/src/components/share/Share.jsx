@@ -4,11 +4,14 @@ import Map from "../../assets/map.png";
 import Friend from "../../assets/friend.png";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
+import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useMakeRequest from "../../hook/useFetch";
+import Img from "../Img";
 const Share = () => {
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
+  const [isLoading, setisLoading] = useState(false);
   const makeRequest = useMakeRequest();
 
   const upload = async () => {
@@ -18,6 +21,7 @@ const Share = () => {
       const res = await makeRequest.post("/upload", formData);
       return res.data;
     } catch (err) {
+      toast.error(err.response.data.msg);
       console.log(err);
     }
   };
@@ -39,13 +43,20 @@ const Share = () => {
   );
 
   const handleClick = async (e) => {
-    e.preventDefault();
-    let imgUrl = "";
-    if (file) imgUrl = await upload();
-
-    mutation.mutate({ desc, img: imgUrl });
-    setDesc("");
-    setFile(null);
+    if (!file && !desc) {
+      toast.error(
+        "please Write a description or choose an image for your Post"
+      );
+    } else {
+      setisLoading(true);
+      e.preventDefault();
+      let imgUrl = "";
+      if (file) imgUrl = await upload();
+      mutation.mutate({ desc, img: imgUrl });
+      setDesc("");
+      setFile(null);
+      setisLoading(false);
+    }
   };
 
   return (
@@ -53,7 +64,7 @@ const Share = () => {
       <div className="container">
         <div className="top">
           <div className="left">
-            <img src={"/upload/" + currentUser.profilePic} alt="" />
+            <Img isDefault={false} src={currentUser.profilePic} alt="" />
             <input
               type="text"
               placeholder={`What's on your mind ${currentUser.name}?`}
@@ -91,7 +102,13 @@ const Share = () => {
               <span>Tag Friends</span>
             </div>
             <div className="item">
-              <button onClick={handleClick}>Share</button>
+              <button
+                disabled={isLoading}
+                style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
+                onClick={handleClick}
+              >
+                Share
+              </button>
             </div>
           </div>
         </div>

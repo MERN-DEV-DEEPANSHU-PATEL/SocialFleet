@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import FollowBtn from "../../follow/FollowBtn";
 import { useQuery } from "@tanstack/react-query";
 import useMakeRequest from "../../../hook/useFetch";
+import Img from "../../Img";
 const SearchResultsContainer = ({ data, setIsSearch }) => {
   const navigate = useNavigate();
   const makeRequest = useMakeRequest();
@@ -39,13 +40,13 @@ const SearchResultsContainer = ({ data, setIsSearch }) => {
                   onClick={() => handleClick(user.id)}
                 >
                   <div className="userInfo">
-                    <img
+                    <Img
+                      isDefault={user.profilePic ? false : true}
                       src={
                         user.profilePic
-                          ? `/upload/${user.profilePic}`
+                          ? user.profilePic
                           : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDnAV2195eKjdsIWb9qODnuYgxUnwJ0exESA&usqp=CAU"
                       }
-                      alt=""
                     />
                     <div className="name">
                       <span className="username">{user.username}</span>

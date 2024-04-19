@@ -54,4 +54,17 @@
       background-color: #0056b3;
     }
   }
+
+  .wrong-email {
+    margin-top: 10px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    .changeBtn {
+      background-color: transparent;
+      border: none;
+      padding: 5px 10px;
+      color: orangered;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  }
 }

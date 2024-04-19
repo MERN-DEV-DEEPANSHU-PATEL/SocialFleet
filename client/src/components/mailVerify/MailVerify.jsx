@@ -5,10 +5,11 @@ import "./MailVerify.scss";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-const MailVerify = ({ inputs }) => {
+const MailVerify = ({ inputs, setsendOtp }) => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const navigate = useNavigate();
   const inputRefs = useRef([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOtpChange = (event, index) => {
     const { value } = event.target;
@@ -25,17 +26,19 @@ const MailVerify = ({ inputs }) => {
   };
 
   const handleVerifyOtp = async () => {
+    setIsLoading(true);
     try {
       const { data } = await axios.post(
         "http://localhost:8800/api/auth/register",
-        {...inputs,otp:otp.join("")}
+        { ...inputs, otp: otp.join("") }
       );
       toast.success(data.msg);
-      navigate("/login")
+      navigate("/login");
     } catch (err) {
       console.log(err);
       toast.error(err.response.data.msg);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -60,6 +63,16 @@ const MailVerify = ({ inputs }) => {
       <button className="verify-button" onClick={handleVerifyOtp}>
         Verify OTP
       </button>
+      <p className="wrong-email">
+        <b>{inputs.email}</b> wrong Email{" "}
+        <button
+          style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
+          onClick={() => setsendOtp(false)}
+          className="changeBtn"
+        >
+          Change Here
+        </button>
+      </p>
     </div>
   );
 };

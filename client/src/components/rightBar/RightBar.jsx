@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/authContext";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "../spinner/Spinner";
 import FollowBtn from "../follow/FollowBtn";
+import Img from "../Img";
 const RightBar = () => {
   const [loading, setLoading] = useState(true);
   const { currentUser } = useContext(AuthContext);
@@ -51,11 +52,10 @@ const RightBar = () => {
                   <li key={index} className="list-item">
                     <div className="user">
                       <div className="userInfo">
-                        <img
+                        <Img
+                          isDefault={friend.profilePic ? false : true}
                           src={
-                            friend.profilePic
-                              ? "/upload/" + friend.profilePic
-                              : profilePic
+                            friend.profilePic ? friend.profilePic : profilePic
                           }
                           alt="Image"
                         />
@@ -77,7 +77,7 @@ const RightBar = () => {
             </ul>
           )}
         </div>
-        
+
         {/*----------------------latest activity check-------------------------------- */}
         {/* <div className="item">
           <span>Latest Activities</span>
@@ -94,10 +94,9 @@ const RightBar = () => {
             <span>1 min ago</span>
           </div>
         </div> */}
-        
-        
+
         {/* --------------------Online user check------------------------------------- */}
-       
+
         {/* <div className="item">
           <span>Online Friends</span>
            <div className="user">
@@ -111,8 +110,6 @@ const RightBar = () => {
             </div>
           </div>
         </div> */}
-      
-      
       </div>
     </div>
   );

@@ -1,11 +1,12 @@
 import React from "react";
+import Img from "../Img";
 
 const Story = ({ imgSrc, username, onClick }) => {
   return (
     <div className="story" onClick={onClick}>
-      <img
-        src={imgSrc ? "/upload/" + imgSrc : "/user.png"}
-        alt={"image of " + username + " not availabe"}
+      <Img
+        isDefault={imgSrc ? false : true}
+        src={imgSrc ? imgSrc : "/user.png"}
       />
       <span>{username}</span>
     </div>

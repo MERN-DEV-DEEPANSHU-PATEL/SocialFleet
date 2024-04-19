@@ -4,6 +4,7 @@ import { AuthContext } from "../../context/authContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 import useMakeRequest from "../../hook/useFetch";
+import Img from "../Img";
 const Comments = ({ postId }) => {
   const [desc, setDesc] = useState("");
   const { currentUser } = useContext(AuthContext);
@@ -38,7 +39,7 @@ const Comments = ({ postId }) => {
   return (
     <div className="comments">
       <div className="write">
-        <img src={"/upload/" + currentUser.profilePic} alt="" />
+        <Img src={currentUser.profilePic} isDefault={false} alt="" />
         <input
           type="text"
           placeholder="write a comment"
@@ -53,7 +54,7 @@ const Comments = ({ postId }) => {
         ? "loading"
         : data.map((comment) => (
             <div className="comment" key={comment.ID}>
-              <img src={"/upload/" + comment.profilePic} alt="" />
+              <Img src={comment.profilePic} isDefault={false} />
               <div className="info">
                 <span>{comment.name}</span>
                 <p>{comment.desc}</p>

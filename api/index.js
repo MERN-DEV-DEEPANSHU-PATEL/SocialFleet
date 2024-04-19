@@ -19,6 +19,7 @@ import { deleteOldStories } from "./controllers/story.js";
 import { db } from "./connect.js";
 import { getSuggestions } from "./controllers/suggestions.js";
 import moment from "moment";
+import { uploadImageToCDN } from "./ImageKit.js";
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
@@ -37,7 +38,7 @@ app.use(cookieParser());
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../client/public/upload");
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + file.originalname);
@@ -46,17 +47,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.post("/api/upload", upload.single("file"), (req, res) => {
+app.post("/api/upload", upload.single("file"), async (req, res) => {
   const file = req.file;
-  console.log("file");
-  res.status(200).json(file.filename);
+  const imageMetadata = await uploadImageToCDN(req.file);
+  res.status(200).json(imageMetadata.name);
 });
 
 ///////////////////////////// USER STORIES FILE HANDLING BEGINS
 
 const storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../client/public/stories");
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + file.originalname);
@@ -70,12 +71,12 @@ app.post("/api/stories", upload2.single("file"), (req, res) => {
   const authHeaders = req.headers.authorization;
   const token = authHeaders.split(" ")[1];
   if (!token) return res.status(401).json("Not logged in!");
-  jwt.verify(token, "secretkey", (err, userInfo) => {
+  jwt.verify(token, "secretkey", async (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
+    const imageMetadata = await uploadImageToCDN(req.file);
     const q =
       "INSERT INTO stories (`media`, `username`,`createdAt`) VALUES (?, ?, ?)";
-
-    const values = [filename, userInfo.username, moment().toDate()];
+    const values = [imageMetadata.name, userInfo.username, moment().toDate()];
 
     db.query(q, values, (err, data) => {
       if (err) {

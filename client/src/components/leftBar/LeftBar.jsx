@@ -10,6 +10,7 @@ import { DarkModeContext } from "../../context/darkModeContext";
 
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
+import Img from "../Img";
 const LeftBar = ({ className }) => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
   const { darkMode, toggle } = useContext(DarkModeContext);
@@ -23,7 +24,7 @@ const LeftBar = ({ className }) => {
               to={"/profile/" + currentUser.username}
               style={{ textDecoration: "none" }}
             >
-              <img src={"/upload/" + currentUser.profilePic} alt="" />
+              <Img isDefault={false} src={currentUser.profilePic} />
               <span>{currentUser.name}</span>
             </Link>
           </div>

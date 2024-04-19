@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import profilePic from "../../assets/profilePic.png";
 import FollowBtn from "../../components/follow/FollowBtn";
 import Posts from "../../components/posts/Posts";
+import Img from "../../components/Img";
 const Following = () => {
   const { darkMode } = useContext(DarkModeContext);
   const { currentUser } = useContext(AuthContext);
@@ -74,7 +75,8 @@ const Following = () => {
                       <li key={index} className="list-item">
                         <div className="user">
                           <div className="userInfo">
-                            <img
+                            <Img
+                              isDefault={friend.profilePic ? false : true}
                               src={
                                 friend.profilePic
                                   ? "/upload/" + friend.profilePic
@@ -113,7 +115,8 @@ const Following = () => {
                   <li key={friend.followedUsername} className="list-item">
                     <div className="user">
                       <div className="userInfo">
-                        <img
+                        <Img
+                          isDefault={friend.profilePic ? false : true}
                           src={
                             friend.profilePic
                               ? "/upload/" + friend.profilePic

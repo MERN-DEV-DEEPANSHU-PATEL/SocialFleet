@@ -50,7 +50,7 @@
           border-radius: 50%;
           border-image-slice: 50%;
           animation: rainbow-animation 10s linear infinite;
-          object-fit: cover;
+          object-fit: contain;
         }
         span {
           color: themed("textColor");

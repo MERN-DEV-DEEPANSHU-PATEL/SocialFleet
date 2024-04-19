@@ -82,12 +82,9 @@ const SearchPage = () => {
                 <li key={user.username} className="list-item">
                   <div className="user">
                     <div className="userInfo">
-                      <img
-                        src={
-                          user.profilePic
-                            ? "/upload/" + user.profilePic
-                            : profilePic
-                        }
+                      <Img
+                        isDefault={user.profilePic ? false : true}
+                        src={user.profilePic ? user.profilePic : profilePic}
                         alt="Image"
                       />
                       <span className="name">{user.name}</span>
