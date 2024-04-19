@@ -28,12 +28,26 @@ app.get("/", (req, res) => {
   res.send({ msg: "Done bro" });
 });
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", true);
-  next();
-});
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "https://socialfleet.netlify.app",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true })); //
 app.use(cookieParser());
 
 // const storage = multer.diskStorage({
