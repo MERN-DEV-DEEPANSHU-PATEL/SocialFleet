@@ -29,7 +29,7 @@ const MailVerify = ({ inputs, setsendOtp }) => {
     setIsLoading(true);
     try {
       const { data } = await axios.post(
-        "http://localhost:8800/api/auth/register",
+        `${import.meta.env.VITE_SERVER_URL}/auth/register`,
         { ...inputs, otp: otp.join("") }
       );
       toast.success(data.msg);

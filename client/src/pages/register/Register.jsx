@@ -31,7 +31,9 @@ const Register = () => {
     setIsLoading(true);
     try {
       const { data } = await axios.get(
-        `http://localhost:8800/api/auth/getotp?email=${inputs.email}&username=${inputs.username}`
+        `${import.meta.env.VITE_SERVER_URL}/auth/getotp?email=${
+          inputs.email
+        }&username=${inputs.username}`
       );
       console.log(data);
       setsendOtp(true);
