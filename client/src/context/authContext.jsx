@@ -11,7 +11,7 @@ export const AuthContextProvider = ({ children }) => {
   const login = async (inputs) => {
     try {
       const res = await axios.post(
-        "http://localhost:8800/api/auth/login",
+        `${import.meta.env.VITE_SERVER_URL}/auth/login`,
         inputs,
         {
           withCredentials: true,
