@@ -110,7 +110,8 @@ db.connect((err) => {
 });
 
 // Starting Server.....
-app.listen(8800, () => {
+const port = process.env.PORT | 8800;
+app.listen(port, () => {
   console.log("Server Started API working!");
 });
 
