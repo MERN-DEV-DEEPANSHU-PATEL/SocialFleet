@@ -2,10 +2,10 @@ import axios from "axios";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
 
- const useMakeRequest = () => {
+const useMakeRequest = () => {
   const { currentUser } = useContext(AuthContext);
   const makeRequest = axios.create({
-    baseURL: "http://localhost:8800/api/",
+    baseURL: import.meta.env.SERVER_URL,
     withCredentials: true,
     headers: {
       Authorization: `Bearer ${currentUser.token}`,
@@ -14,4 +14,4 @@ import { AuthContext } from "../context/authContext";
 
   return makeRequest;
 };
-export default useMakeRequest
+export default useMakeRequest;
