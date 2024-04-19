@@ -36,16 +36,17 @@ app.use(express.json());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true })); //
 app.use(cookieParser());
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "/");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + file.originalname);
+//   },
+// });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
+const upload = multer();
 
 app.post("/api/upload", upload.single("file"), async (req, res) => {
   const file = req.file;
@@ -55,16 +56,17 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
 
 ///////////////////////////// USER STORIES FILE HANDLING BEGINS
 
-const storage2 = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
-  },
-});
+// const storage2 = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "/");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + file.originalname);
+//   },
+// });
 
-const upload2 = multer({ storage: storage2 });
+// const upload2 = multer({ storage: storage2 });
+const upload2 = multer();
 
 app.post("/api/stories", upload2.single("file"), (req, res) => {
   const filename = req.file.filename;
