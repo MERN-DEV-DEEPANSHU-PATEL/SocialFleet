@@ -8,6 +8,7 @@ import Story from "./Story";
 import CloseIcon from "@mui/icons-material/Close";
 import { queryClient } from "../..";
 import StoryCarousel from "./StoryCarousel";
+import { uploadImageToCDN } from "../../ImageKit";
 const Stories = () => {
   const { currentUser } = useContext(AuthContext);
   const makeRequest = useMakeRequest();
@@ -20,8 +21,8 @@ const Stories = () => {
   );
 
   const mutation = useMutation(
-    (formData) => {
-      return makeRequest.post("/stories", formData);
+    async (urlName) => {
+      return makeRequest.post("/stories", { urlName });
     },
     {
       onSuccess: () => {
@@ -32,10 +33,9 @@ const Stories = () => {
     }
   );
 
-  const handleUpload = (e) => {
-    const formData = new FormData();
-    formData.append("file", e.target.files[0]);
-    mutation.mutate(formData);
+  const handleUpload = async (e) => {
+    const imageUrlName = await uploadImageToCDN(e.target.files[0]);
+    mutation.mutate(imageUrlName);
   };
 
   return (

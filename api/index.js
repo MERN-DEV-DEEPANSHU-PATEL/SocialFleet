@@ -19,8 +19,7 @@ import { deleteOldStories } from "./controllers/story.js";
 import { db } from "./connect.js";
 import { getSuggestions } from "./controllers/suggestions.js";
 import moment from "moment";
-import { uploadImageToCDN } from "./ImageKit.js";
-
+import { getToken, uploadImageToCDN } from "./ImageKit.js";
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
@@ -29,43 +28,24 @@ app.get("/", (req, res) => {
   res.send({ msg: "Done bro" });
 });
 
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  "http://localhost:5173",
-  "https://socialfleet.netlify.app",
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        console.log("origin found");
-
-        callback(null, true);
-      } else {
-        console.log("origin not found");
-        callback(null, true);
-        // callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
-
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", true);
+  next();
+});
 app.use(express.json());
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true })); //
 app.use(cookieParser());
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "/");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + file.originalname);
-//   },
-// });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
 
-// const upload = multer({ storage: storage });
-const upload = multer();
+const upload = multer({ storage: storage });
 
 app.post("/api/upload", upload.single("file"), async (req, res) => {
   const file = req.file;
@@ -75,29 +55,26 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
 
 ///////////////////////////// USER STORIES FILE HANDLING BEGINS
 
-// const storage2 = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "/");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + file.originalname);
-//   },
-// });
+const storage2 = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
 
-// const upload2 = multer({ storage: storage2 });
-const upload2 = multer();
+const upload2 = multer({ storage: storage2 });
 
-app.post("/api/stories", upload2.single("file"), (req, res) => {
-  const filename = req.file.filename;
+app.post("/api/stories", (req, res) => {
   const authHeaders = req.headers.authorization;
   const token = authHeaders.split(" ")[1];
   if (!token) return res.status(401).json("Not logged in!");
   jwt.verify(token, "secretkey", async (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
-    const imageMetadata = await uploadImageToCDN(req.file);
     const q =
       "INSERT INTO stories (`media`, `username`,`createdAt`) VALUES (?, ?, ?)";
-    const values = [imageMetadata.name, userInfo.username, moment().toDate()];
+    const values = [req.body.urlName, userInfo.username, moment().toDate()];
 
     db.query(q, values, (err, data) => {
       if (err) {
@@ -121,6 +98,12 @@ app.use("/api/relationships", relationshipRoutes);
 app.get("/api/suggestions", getSuggestions);
 // app.get("/test", getRelationshipsWithData);
 // To Check DataBase is connected or not
+
+app.post("/api/generate-auth-token", async (req, res) => {
+  const authenticationParameters = await getToken();
+  res.json(authenticationParameters);
+});
+
 db.connect((err) => {
   if (err) {
     console.log("there is an error", err);

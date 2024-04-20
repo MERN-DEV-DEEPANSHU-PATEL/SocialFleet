@@ -6,6 +6,7 @@ import useMakeRequest from "../../hook/useFetch";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/authContext";
 import Img from "../Img";
+import { uploadImageToCDN } from "../../ImageKit";
 
 const Update = ({ setOpenUpdate, user }) => {
   const [cover, setCover] = useState(null);
@@ -61,8 +62,8 @@ const Update = ({ setOpenUpdate, user }) => {
     try {
       let coverUrl;
       let profileUrl;
-      coverUrl = cover ? await upload(cover) : user.coverPic;
-      profileUrl = profile ? await upload(profile) : user.profilePic;
+      coverUrl = cover ? await uploadImageToCDN(cover) : user.coverPic;
+      profileUrl = profile ? await uploadImageToCDN(profile) : user.profilePic;
 
       mutation.mutate({ ...texts, coverPic: coverUrl, profilePic: profileUrl });
       setOpenUpdate(false);

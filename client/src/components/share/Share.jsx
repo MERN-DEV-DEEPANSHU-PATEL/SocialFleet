@@ -8,25 +8,26 @@ import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useMakeRequest from "../../hook/useFetch";
 import Img from "../Img";
+import { uploadImageToCDN } from "../../ImageKit";
 const Share = () => {
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const makeRequest = useMakeRequest();
 
-  const upload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      return res.data;
-    } catch (err) {
-      toast.error(err.response.data.msg);
-      console.log(err);
-    }
-  };
+  // const upload = async () => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("file", file);
+  //     const res = await makeRequest.post("/upload", formData, {
+  //       headers: { "Content-Type": "multipart/form-data" },
+  //     });
+  //     return res.data;
+  //   } catch (err) {
+  //     toast.error(err.response.data.msg);
+  //     console.log(err);
+  //   }
+  // };
 
   const { currentUser } = useContext(AuthContext);
 
@@ -53,7 +54,7 @@ const Share = () => {
       setisLoading(true);
       e.preventDefault();
       let imgUrl = "";
-      if (file) imgUrl = await upload();
+      if (file) imgUrl = await uploadImageToCDN(file);
       mutation.mutate({ desc, img: imgUrl });
       setDesc("");
       setFile(null);

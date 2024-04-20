@@ -13,6 +13,12 @@ export const imagekit = new ImageKit({
   urlEndpoint,
 });
 
+export const getToken = async () => {
+  const authenticationParameters = await imagekit.getAuthenticationParameters();
+  console.log("authenticationParameters", authenticationParameters);
+  return authenticationParameters;
+};
+
 export const uploadImageToCDN = async (image) => {
   try {
     image.buffer = fs.readFileSync(image.path);
