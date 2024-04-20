@@ -12,7 +12,7 @@ export const getStories = (req, res) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const q = `
-      SELECT u.username, u.profilePic, s.media, s.createdAt
+      SELECT u.username, u.profilePic, s.media, s.createdAt, s.ID
       FROM users u
       JOIN stories s ON u.username = s.username
       WHERE u.username = ? OR u.username IN (
@@ -42,6 +42,7 @@ export const getStories = (req, res) => {
             };
           }
           acc[cur.username].activeStories.push({
+            id: cur.ID,
             media: cur.media,
             createdAt: cur.createdAt,
           });
@@ -62,21 +63,15 @@ export const addStory = (req, res) => {
   const authHeaders = req.headers.authorization;
   const token = authHeaders.split(" ")[1];
   if (!token) return res.status(401).json("Not logged in!");
-
-  jwt.verify(token, "secretkey", (err, userInfo) => {
+  jwt.verify(token, "secretkey", async (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
-
     const q =
-      "INSERT INTO stories (`img`, `createdAt`, `username`) VALUES (?, ?, ?)";
-    const values = [
-      req.body.img,
-      moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-      userInfo.username,
-    ];
+      "INSERT INTO stories (`media`, `username`,`createdAt`) VALUES (?, ?, ?)";
+    const values = [req.body.urlName, userInfo.username, moment().toDate()];
 
     db.query(q, values, (err, data) => {
       if (err) {
-        console.error("Error adding story:", err);
+        console.error("Error adding post:", err);
         return res.status(500).json(err);
       }
       return res.status(200).json("Story has been created.");

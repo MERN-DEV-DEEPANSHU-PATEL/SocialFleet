@@ -10,6 +10,7 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  animation: fadeIn 0.5s ease;
 
   .closeIcon {
     position: absolute;
@@ -20,14 +21,19 @@
     cursor: pointer;
     color: white;
     font-size: 24px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.2);
+    }
   }
 
   .story {
     display: flex;
-    // justify-content: center;
     gap: 10px;
     align-items: center;
     cursor: pointer;
+
     img {
       width: 60px;
       height: 60px;
@@ -35,7 +41,9 @@
       border-color: rgba(253, 128, 128, 0.5);
       border-radius: 50%;
       object-fit: cover;
+      animation: pulse 2s infinite;
     }
+
     span {
       color: themed("textColor");
       font-weight: 500;
@@ -43,19 +51,14 @@
         "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
     }
   }
+
   .carousel {
     background-color: white;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    // text-align: center;
     position: relative;
-
-    h1 {
-      margin-bottom: 20px;
-      font-size: 20px;
-      color: #333;
-    }
+    text-align: center;
 
     .ontapcarousel {
       position: relative;
@@ -66,6 +69,7 @@
         height: 80vh;
         object-fit: contain;
         cursor: pointer;
+        animation: fadeInUp 0.5s ease;
       }
 
       .progress-bar {
@@ -74,6 +78,34 @@
         left: 0;
         height: 4px;
         background-color: #4caf50;
+        transition: all 0.1s ease-in-out;
+        // animation: progressBar 4s linear infinite;
+      }
+    }
+
+    .additional-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+
+      button {
+        padding: 8px 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        &:last-child {
+          background-color: red;
+        }
+        &:last-child:hover {
+          background-color: rgb(170, 0, 0);
+        }
+        &:hover {
+          background-color: #45a049;
+        }
       }
     }
   }
@@ -90,19 +122,64 @@
       padding: 10px 20px;
       cursor: pointer;
       transition: scale 0.3s ease;
+
       svg {
         font-size: 30px;
         font-weight: 900;
       }
+
       &:active {
         scale: 0.8;
       }
     }
+
     .left {
       left: 25%;
     }
+
     .right {
       right: 25%;
     }
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes progressBar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
   }
 }

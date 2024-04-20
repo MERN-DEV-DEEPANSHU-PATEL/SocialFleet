@@ -12,7 +12,6 @@ import storiesRoutes from "./routes/stories.js";
 import relationshipRoutes from "./routes/relationships.js";
 import jwt from "jsonwebtoken";
 import cors from "cors";
-import multer from "multer";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { deleteOldStories } from "./controllers/story.js";
@@ -25,7 +24,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 //middlewares
 app.get("/", (req, res) => {
-  res.send({ msg: "Done bro" });
+  res.send({ msg: "Server Is Running" });
 });
 
 app.use((req, res, next) => {
@@ -35,57 +34,6 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true })); //
 app.use(cookieParser());
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-
-app.post("/api/upload", upload.single("file"), async (req, res) => {
-  const file = req.file;
-  const imageMetadata = await uploadImageToCDN(req.file);
-  res.status(200).json(imageMetadata.name);
-});
-
-///////////////////////////// USER STORIES FILE HANDLING BEGINS
-
-const storage2 = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
-  },
-});
-
-const upload2 = multer({ storage: storage2 });
-
-app.post("/api/stories", (req, res) => {
-  const authHeaders = req.headers.authorization;
-  const token = authHeaders.split(" ")[1];
-  if (!token) return res.status(401).json("Not logged in!");
-  jwt.verify(token, "secretkey", async (err, userInfo) => {
-    if (err) return res.status(403).json("Token is not valid!");
-    const q =
-      "INSERT INTO stories (`media`, `username`,`createdAt`) VALUES (?, ?, ?)";
-    const values = [req.body.urlName, userInfo.username, moment().toDate()];
-
-    db.query(q, values, (err, data) => {
-      if (err) {
-        console.error("Error adding post:", err);
-        return res.status(500).json(err);
-      }
-      return res.status(200).json("Story has been created.");
-    });
-  });
-});
-///////////////////////////// USER STORIES FILE HANDLING ENDS
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
@@ -111,12 +59,11 @@ db.connect((err) => {
     return err;
   }
   console.log("Database Connected");
-});
-
-// Starting Server.....
-const port = process.env.PORT | 8800;
-app.listen(port, () => {
-  console.log("Server Started API working!");
+  // Starting Server.....
+  const port = process.env.PORT | 8800;
+  app.listen(port, () => {
+    console.log("Server Started API working!");
+  });
 });
 
 setInterval(() => {

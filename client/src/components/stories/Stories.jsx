@@ -33,9 +33,25 @@ const Stories = () => {
     }
   );
 
+  const deleteMutation = useMutation(
+    async (storyId) => {
+      return makeRequest.delete(`/stories/${storyId}`);
+    },
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        toast.success("Story Deleted");
+        queryClient.invalidateQueries(["stories"]);
+      },
+    }
+  );
+
   const handleUpload = async (e) => {
     const imageUrlName = await uploadImageToCDN(e.target.files[0]);
     mutation.mutate(imageUrlName);
+  };
+  const handleDeleteStory = (storyId) => {
+    deleteMutation.mutate(storyId);
   };
 
   return (
@@ -137,6 +153,7 @@ const Stories = () => {
           setOpenStories={setOpenStories}
           users={data}
           initialIndex={intialStory}
+          handleDeleteStory={handleDeleteStory}
         />
       )}
     </div>

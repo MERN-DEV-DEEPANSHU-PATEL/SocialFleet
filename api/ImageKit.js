@@ -15,7 +15,6 @@ export const imagekit = new ImageKit({
 
 export const getToken = async () => {
   const authenticationParameters = await imagekit.getAuthenticationParameters();
-  console.log("authenticationParameters", authenticationParameters);
   return authenticationParameters;
 };
 

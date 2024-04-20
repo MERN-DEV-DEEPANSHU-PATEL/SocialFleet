@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/authContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
-
+import profilePic from "../../assets/profilePic.png";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import Img from "../Img";
@@ -24,7 +24,12 @@ const LeftBar = ({ className }) => {
               to={"/profile/" + currentUser.username}
               style={{ textDecoration: "none" }}
             >
-              <Img isDefault={false} src={currentUser.profilePic} />
+              <Img
+                isDefault={currentUser.profilePic ? false : true}
+                src={
+                  currentUser.profilePic ? currentUser.profilePic : profilePic
+                }
+              />
               <span>{currentUser.name}</span>
             </Link>
           </div>

@@ -13,6 +13,7 @@ const Update = ({ setOpenUpdate, user }) => {
   const { setCurrentUser } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
   const makeRequest = useMakeRequest();
+  const [isLoading, setIsLoading] = useState(false);
   const [texts, setTexts] = useState({
     email: user.email,
     password: user.password,
@@ -20,17 +21,6 @@ const Update = ({ setOpenUpdate, user }) => {
     city: user.city,
     website: user.website,
   });
-
-  const upload = async (file) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData);
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const handleChange = (e) => {
     setTexts((prev) => ({ ...prev, [e.target.name]: [e.target.value] }));
@@ -58,7 +48,7 @@ const Update = ({ setOpenUpdate, user }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     try {
       let coverUrl;
       let profileUrl;
@@ -73,6 +63,7 @@ const Update = ({ setOpenUpdate, user }) => {
       console.log("error while update profile", error);
       toast.error("error while update profile");
     }
+    setIsLoading(false);
   };
   return (
     <div className="update">
@@ -148,7 +139,13 @@ const Update = ({ setOpenUpdate, user }) => {
             value={texts.website}
             onChange={handleChange}
           />
-          <button onClick={handleClick}>Update</button>
+          <button
+            disabled={isLoading}
+            style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
+            onClick={handleClick}
+          >
+            Update
+          </button>
         </form>
         <button className="close" onClick={() => setOpenUpdate(false)}>
           close

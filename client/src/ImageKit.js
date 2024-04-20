@@ -31,7 +31,6 @@ export const uploadImageToCDN = async (file) => {
       isPrivateFile: false, // Set to true if you want to make the uploaded file private
       responseFields: ["thumbUrl", "fileId", "name"], // Specify the fields you want to receive in the response
     });
-    console.log(uploadResponse);
     return uploadResponse.name;
   } catch (err) {
     toast.error(err.message);

@@ -21,17 +21,15 @@ export const sendOtp = async (email) => {
   const mailOptions = {
     from: process.env.EMAIL_PRIVATE,
     to: email,
-    subject: "OTP Verification for Dribble",
+    subject: "OTP Verification for SocialFleet",
     html: ` <div style="max-width: 600px; margin: 20px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
     <h2 style="text-align: center; color: #333;">OTP Verification</h2>
     <p style="margin-bottom: 20px;">Hello,</p>
-    <p style="margin-bottom: 20px;">Your OTP for Dribbble verification is:</p>
+    <p style="margin-bottom: 20px;">Your OTP for SocialFleet verification is:</p>
     <p style="font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 20px;">${otp}</p>
     <p style="margin-bottom: 20px;">Please use this OTP to complete the verification process.</p>
     <p style="margin-bottom: 20px;">If you didn't request this OTP, please ignore this email.</p>
-    <p style="margin-bottom: 20px;">Thank you!</p>
-    <a target="_blank" href="${process.env.SERVER_URL}/auth/user/verifymail?email=${email}&otp=${otp}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Verify OTP</a>
-</div>`,
+    <p style="margin-bottom: 20px;">Thank you!</p>`,
   };
   try {
     console.log("i am sening");
@@ -47,7 +45,7 @@ export const sendOtp = async (email) => {
 
 export const verifyOtp = (otp, email) => {
   const storedOTP = otpStore.get(email);
-  console.log(otp,email,"verifyotp here");
+  console.log(otp, email, "verifyotp here");
   if (!storedOTP) {
     return { isVerify: false, msg: "Invalid email or OTP" };
   }

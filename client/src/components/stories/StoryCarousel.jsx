@@ -1,29 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./StoryCarousel.scss";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import Story from "./Story";
 import Img from "../Img";
-const StoryCarousel = ({ users, setOpenStories, initialIndex }) => {
+import { AuthContext } from "../../context/authContext";
+
+const StoryCarousel = ({
+  users,
+  setOpenStories,
+  initialIndex,
+  handleDeleteStory,
+}) => {
   const [currentUserIndex, setCurrentUserIndex] = useState(initialIndex);
   const [imageIndex, setImageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [isPaused, setIsPaused] = useState(false); // State for pausing/resuming the timer
+
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (users[currentUserIndex].activeStories.length - 1 == imageIndex) {
-        handleNextUser();
-      } else {
-        handleNextImage();
-      }
-    }, 4000);
-
+    let interval;
+    if (!isPaused) {
+      interval = setInterval(() => {
+        if (users[currentUserIndex].activeStories.length - 1 === imageIndex) {
+          handleNextUser();
+        } else {
+          handleNextImage();
+        }
+      }, 4000);
+    }
     return () => clearInterval(interval);
-  }, [imageIndex, currentUserIndex]); // Trigger effect when currentUserIndex changes
+  }, [imageIndex, currentUserIndex, isPaused]);
 
   const handleNextUser = () => {
-    if (users.length - 1 == currentUserIndex) {
+    if (users.length - 1 === currentUserIndex) {
       setOpenStories(false);
     } else {
       setCurrentUserIndex((prevIndex) => prevIndex + 1);
@@ -36,11 +48,13 @@ const StoryCarousel = ({ users, setOpenStories, initialIndex }) => {
     setCurrentUserIndex((prevIndex) =>
       prevIndex === 0 ? users.length - 1 : prevIndex - 1
     );
+    setImageIndex(0);
     setProgress(0); // Reset progress when moving to the previous user
   };
 
   const handleImageClick = () => {
     // Move to the next image or next user
+    console.log("image clicked");
     if (users[currentUserIndex].activeStories.length > 1) {
       handleNextImage();
     } else {
@@ -49,26 +63,32 @@ const StoryCarousel = ({ users, setOpenStories, initialIndex }) => {
   };
 
   const handleNextImage = () => {
-    if (users[currentUserIndex].activeStories.length - 1 == imageIndex) {
+    if (users[currentUserIndex].activeStories.length - 1 === imageIndex) {
       handleNextUser();
     } else {
       setProgress(0);
       setImageIndex((index) => index + 1);
     }
-    // Reset progress for the next image
+  };
+
+  const handlePauseResume = () => {
+    setIsPaused((prevState) => !prevState);
   };
 
   useEffect(() => {
-    const interval = setTimeout(() => {
-      setProgress((prevProgress) => prevProgress + 2.5);
-      if (progress == 100) {
-        setProgress(0);
-      }
-    }, 100);
+    let interval;
+    if (!isPaused) {
+      interval = setTimeout(() => {
+        setProgress((prevProgress) => prevProgress + 2.5);
+        if (progress === 100) {
+          setProgress(0);
+        }
+      }, 100);
+    }
     return () => {
       clearTimeout(interval);
     };
-  }, [progress]);
+  }, [progress, isPaused]);
 
   return (
     <div className="stories-view">
@@ -79,25 +99,37 @@ const StoryCarousel = ({ users, setOpenStories, initialIndex }) => {
         <Story
           imgSrc={users[currentUserIndex].profilePic}
           username={
-            currentUserIndex == 0
+            currentUserIndex === 0
               ? "Your Stories"
               : users[currentUserIndex].username
           }
         />
         {/* Displaying stories of the currently selected user */}
         {/* Display the image carousel */}
-        <div className="ontapcarousel">
-          {
-            <Img
-              isDefault={false}
-              src={users[currentUserIndex].activeStories[imageIndex].media}
-              alt={"story of user"}
-              onClick={handleImageClick}
-            />
-          }
-
+        <div className="ontapcarousel" onClick={handleImageClick}>
+          <Img
+            isDefault={false}
+            src={users[currentUserIndex].activeStories[imageIndex].media}
+            alt={"story of user"}
+          />
           {progress > 0 && (
             <div className="progress-bar" style={{ width: `${progress}%` }} />
+          )}
+        </div>
+        <div className="additional-buttons">
+          <button onClick={handlePauseResume}>
+            {isPaused ? "Resume" : "Pause"}
+          </button>
+          {currentUser.username === users[currentUserIndex].username && (
+            <button
+              onClick={() =>
+                handleDeleteStory(
+                  users[currentUserIndex].activeStories[imageIndex].id
+                )
+              }
+            >
+              Delete Story
+            </button>
           )}
         </div>
       </div>

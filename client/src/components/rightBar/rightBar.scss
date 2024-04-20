@@ -35,13 +35,15 @@
         }
 
         .user {
-          display: flex;
+          display: grid;
+          grid-template-columns: 80% 20%;
           align-items: center;
           justify-content: space-between;
           margin: 20px 0px;
 
           .userInfo {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             gap: 20px;
             position: relative;

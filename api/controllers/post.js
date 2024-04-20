@@ -32,7 +32,6 @@ export const getPosts = (req, res) => {
         console.error("Error fetching posts:", err);
         return res.status(500).json(err);
       }
-      console.log(results);
       return res.status(200).json(results);
     });
   });
