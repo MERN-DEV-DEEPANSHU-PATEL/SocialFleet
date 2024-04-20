@@ -20,6 +20,7 @@ import { db } from "./connect.js";
 import { getSuggestions } from "./controllers/suggestions.js";
 import moment from "moment";
 import { uploadImageToCDN } from "./ImageKit.js";
+
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
@@ -38,9 +39,13 @@ app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
+        console.log("origin found");
+
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        console.log("origin not found");
+        callback(null, true);
+        // callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
